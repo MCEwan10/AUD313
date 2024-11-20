@@ -171,6 +171,7 @@ MonoBehaviour:
   heart3: {fileID: 0}
   scoreObj: {fileID: 0}
   startTime: 0
+  delayAmount: 5
 --- !u!4 &39148638
 Transform:
   m_ObjectHideFlags: 0

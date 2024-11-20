@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Tracing;
@@ -25,16 +26,22 @@ public class GameScript : MonoBehaviour
     public GameObject heart2;
     public GameObject heart3;
     public GameObject scoreObj;
+
     /*Dictionary creation*/
     Dictionary<string, int> attackDict= new Dictionary<string, int>();
     Dictionary<string, int> pitchDict= new Dictionary<string, int>();
     Dictionary<KeyCode, int> attInpDict= new Dictionary<KeyCode, int>();
     Dictionary<KeyCode, int> pitInpDict= new Dictionary<KeyCode, int>();
+
     /*Timer based variables*/
     public float startTime;
     private float currentTime;
     private bool timerStarted = false;
     private bool buttonPressedDuringTimer = false;
+
+    //flag for round checking
+    private bool isRoundOver = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -42,21 +49,25 @@ public class GameScript : MonoBehaviour
         score = 0;
         attackType = 0;
         attackPitch = 0;
-        startTime = 4.0f;/*initial timer duration*/
+        startTime = 10.0f;/*initial timer duration*/
         currentTime = startTime;
         hitObj.SetActive(false);
         blockObj.SetActive(false);
         textSayingScore.SetActive(false);
+
         /*adding to the dictonary for the attack dictionary for random (not used but good for reference)*/
         attackDict.Add("Punch",1);
         attackDict.Add("Sword",2);
+
         /*adding to the dictonary for the pitch dictionary for random (not used but good for reference)*/
         pitchDict.Add("High",1);
         pitchDict.Add("Medium",2);
         pitchDict.Add("Low",3);
+
         /*adding to the dictonary for the attack dictionary for player input*/
         attInpDict.Add(KeyCode.Keypad4,1);//left
         attInpDict.Add(KeyCode.Keypad6,2);//right
+
         /*adding to the dictonary for the pitch dictionary for player input*/
         pitInpDict.Add(KeyCode.Keypad8,1);//up
         pitInpDict.Add(KeyCode.Keypad5,2);//middle
@@ -67,6 +78,8 @@ public class GameScript : MonoBehaviour
         if (startTime !< 0.4f && wasHealthReduced == false) currentTime = startTime;
         timerStarted = true;
         buttonPressedDuringTimer = false;
+
+        return buttonPressedDuringTimer;
     }
     public void GenerateNumbers(bool isTimerRunning)
     {
@@ -91,31 +104,55 @@ public class GameScript : MonoBehaviour
 
         if (timerStarted)
         {
-            currentTime -= Time.deltaTime;
-            if (currentTime <= 0.0f && !buttonPressedDuringTimer)
+            currentTime -= Time.deltaTime; //start countdown
+
+            if (currentTime <= 0.0f && !buttonPressedDuringTimer) //if valid timer and null input
             {
                 
-                Debug.Log("Time's up!");
+                Debug.Log("Time's up to press button!");
+
                 /*check input and if match attack and pitch*/
                 if (playerAttakType==attackType && playerAttakPitch == attackPitch)
                 {
-                    //if yes;
+                    //player wins round
                     PlayerBlocked();
                 }
-                //if no;
                 else
                 {
+                    //lose round
                     PlayerHit();
                 }
                 //hitObj.SetActive(false);
                 //blockObj.SetActive(false);
                 timerStarted = false;
+                ResetTimer(currentTime);
                 buttonPressedDuringTimer = false;
+
+                isRoundOver = true;
+
+                //reset assets to init states
+                ResetGameLoop();
+
+                //start new round
+                if(health > 0 && !isRoundOver)
+                {
+                    StartCoroutine(Delay(delayAmount));
+                    RunAttackCycle();
+                }
             }
 
         }
         timerStarted = true;
     }
+
+    private void ResetGameLoop()
+    {
+        hitObj.SetActive(false);
+        blockObj.SetActive(false);
+        //GenerateNumbers(timerStarted);
+        isRoundOver = false;
+    }
+
     public void ButtonPressed()
     {
         if (timerStarted) buttonPressedDuringTimer = true;
@@ -129,37 +166,32 @@ public class GameScript : MonoBehaviour
 
     public void PlayerHit()
     {
-    /*show hit*/
-    hitObj.SetActive(true);
-    /*reduce health*/
-    health -= 1;
-    /*check health is above zero*/
-    if (health > 0)
-    {
-        /*if yes;*/
-            /*rerun cycle*/
-            ResetTimer(true);
+        hitObj.SetActive(true);
+        health--;
+
+        if (health > 0)
+        {
+            isRoundOver = true;
+            ResetTimer(currentTime);
         }
-        /*if no;*/
         else
         {
-            /*stop cycle*/
             GameOver();
         }
-        yield return null;//force wait
+
+        StartCoroutine(Delay(delayAmount));
     }
+
     public void PlayerBlocked()
     {
-        /*if yes;*/
-        /*show block*/
         blockObj.SetActive(true);
-        //add score
         score += 100;
-        /*reduce timer*/
         startTime -= 0.2f;
-        yield return null;//force wait
-        /*rerun cycle*/
-        ResetTimer(false);
+
+        StartCoroutine(Delay(delayAmount));
+
+        isRoundOver = true;
+        ResetTimer(currentTime);
     }
     // Update is called once per frame
     void Update()
@@ -170,17 +202,57 @@ public class GameScript : MonoBehaviour
             if(i< numOfHearts) hearts[i].enabled=true;
             else hearts[i].enabled=false;
         }
+
+        RegisterInput();
+
+        if (health > 0 && !isRoundOver)
+        {
+            StartCoroutine(Delay(delayAmount));
+
+            RunAttackCycle();
+        }
+        
+    }
+
+    public int delayAmount = 0;
+    IEnumerator Delay(int delayAmount)
+    {
+     
+        yield return new WaitForSeconds(delayAmount); //2 sec delay
+    }
+
+    private void ResetTimer(float _pCurrentTime)
+    {
+        _pCurrentTime = startTime;
+    }
+
+    private void RegisterInput()
+    {
         /*get player input*/
-                if (Input.GetKeyDown(KeyCode.Keypad4)) {playerAttakType = 1;
-                Debug.Log(playerAttakType);}
-                if (Input.GetKeyDown(KeyCode.Keypad6)) {playerAttakType = 2;
-                Debug.Log(playerAttakType);}
-                if (Input.GetKeyDown(KeyCode.Keypad8)) {playerAttakPitch = 1;
-                Debug.Log(playerAttakPitch);}
-                if (Input.GetKeyDown(KeyCode.Keypad5)) {playerAttakPitch = 2;
-                Debug.Log(playerAttakPitch);}
-                if (Input.GetKeyDown(KeyCode.Keypad2)) {playerAttakPitch = 3;
-                Debug.Log(playerAttakPitch);}
-        if (health > 0) RunAttackCycle();
+        if (Input.GetKeyDown(KeyCode.Keypad4))
+        {
+            playerAttakType = 1;
+            Debug.Log(playerAttakType);
+        }
+        if (Input.GetKeyDown(KeyCode.Keypad6))
+        {
+            playerAttakType = 2;
+            Debug.Log(playerAttakType);
+        }
+        if (Input.GetKeyDown(KeyCode.Keypad8))
+        {
+            playerAttakPitch = 1;
+            Debug.Log(playerAttakPitch);
+        }
+        if (Input.GetKeyDown(KeyCode.Keypad5))
+        {
+            playerAttakPitch = 2;
+            Debug.Log(playerAttakPitch);
+        }
+        if (Input.GetKeyDown(KeyCode.Keypad2))
+        {
+            playerAttakPitch = 3;
+            Debug.Log(playerAttakPitch);
+        }
     }
 }
