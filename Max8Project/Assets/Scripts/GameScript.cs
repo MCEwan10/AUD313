@@ -26,6 +26,16 @@ public class GameScript : MonoBehaviour
     public GameObject heart2;
     public GameObject heart3;
     public GameObject scoreObj;
+    /*referencing audio in unity*/
+    public AudioSource audioSource;
+    public AudioClip swordAttack;
+    public AudioClip swordBlocked;
+    public AudioClip swordHit;
+    public AudioClip punchAttack;
+    public AudioClip punchBlocked;
+    public AudioClip punchHit;
+    public float clipLength;
+    public float[] pitches;
 
     /*Dictionary creation*/
     Dictionary<string, int> attackDict= new Dictionary<string, int>();
@@ -54,6 +64,9 @@ public class GameScript : MonoBehaviour
         hitObj.SetActive(false);
         blockObj.SetActive(false);
         textSayingScore.SetActive(false);
+        pitches[0] = -1f;
+        pitches[1] = 0f;
+        pitches[2] = 1f;
 
         /*adding to the dictonary for the attack dictionary for random (not used but good for reference)*/
         attackDict.Add("Punch",1);
@@ -90,6 +103,18 @@ public class GameScript : MonoBehaviour
         /*pick attackPitch (High, Neutral or Low)*/
         attackPitch = Random.Range(1, 4);
         Debug.Log("$Attack :"+attackType + " Pitch :"+attackPitch);
+        /*set the sound the the correct attack*/
+        if (attackType == 1)
+        {
+            audioSource.clip = punchAttack;
+            clipLength = punchAttack.length;
+        }
+        else
+        {
+            audioSource.clip = swordAttack;
+            clipLength = swordAttack.length;
+        }
+        audioSource.pitch = pitches[attackPitch-1];
         }
     }
     public void RunAttackCycle()
