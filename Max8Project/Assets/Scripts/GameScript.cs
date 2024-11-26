@@ -125,7 +125,9 @@ public class GameScript : MonoBehaviour
         /*send to Max*/
         /*return sounds*/
         /*play sound*/
+        audioSource.Play();
         /*wait*/
+        while (audioSource.isPlaying)
 
         if (timerStarted)
         {
@@ -191,7 +193,17 @@ public class GameScript : MonoBehaviour
 
     public void PlayerHit()
     {
-        hitObj.SetActive(true);
+        /*set the sound the the correct hit*/
+        if (attackType == 1)
+        {
+            audioSource.clip = punchHit;
+        }
+        else
+        {
+            audioSource.clip = swordHit;
+        }
+        audioSource.Play();
+        while(audioSource.isPlaying)hitObj.SetActive(true);
         health--;
 
         if (health > 0)
@@ -209,7 +221,17 @@ public class GameScript : MonoBehaviour
 
     public void PlayerBlocked()
     {
-        blockObj.SetActive(true);
+        /*set the sound the the correct block*/
+        if (attackType == 1)
+        {
+            audioSource.clip = punchBlocked;
+        }
+        else
+        {
+            audioSource.clip = swordBlocked;
+        }
+        audioSource.Play();
+        while(audioSource.isPlaying) blockObj.SetActive(true);
         score += 100;
         startTime -= 0.2f;
 
