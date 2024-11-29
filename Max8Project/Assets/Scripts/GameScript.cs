@@ -22,18 +22,19 @@ public class GameScript : MonoBehaviour
     /*referencing tags in unity*/
     public GameObject hitObj;
     public GameObject blockObj;
-    public GameObject heart1;
-    public GameObject heart2;
-    public GameObject heart3;
-    public GameObject scoreObj;
+    public GameObject UIObj;
     /*referencing audio in unity*/
-    public AudioSource audioSource;
+    public AudioSource soundOnUI;
+    public AudioSource soundOnBlock;
+    public AudioSource soundOnHit;
+    public AudioSource BGM;
     public AudioClip swordAttack;
     public AudioClip swordBlocked;
     public AudioClip swordHit;
     public AudioClip punchAttack;
     public AudioClip punchBlocked;
     public AudioClip punchHit;
+    public AudioClip healthLost;
     public float clipLength;
     public float[] pitches;
 
@@ -67,6 +68,10 @@ public class GameScript : MonoBehaviour
         pitches[0] = -1f;
         pitches[1] = 0f;
         pitches[2] = 1f;
+
+        soundOnUI = UIObj.GetComponent<AudioSource>();
+        soundOnBlock = blockObj.GetComponent<AudioSource>();
+        soundOnHit = hitObj.GetComponent<AudioSource>();
 
         /*adding to the dictonary for the attack dictionary for random (not used but good for reference)*/
         attackDict.Add("Punch",1);
@@ -106,15 +111,15 @@ public class GameScript : MonoBehaviour
         /*set the sound the the correct attack*/
         if (attackType == 1)
         {
-            audioSource.clip = punchAttack;
+            soundOnUI.clip = punchAttack;
             clipLength = punchAttack.length;
         }
         else
         {
-            audioSource.clip = swordAttack;
+            soundOnUI.clip = swordAttack;
             clipLength = swordAttack.length;
         }
-        audioSource.pitch = pitches[attackPitch-1];
+        soundOnUI.pitch = pitches[attackPitch--];
         }
     }
     public void RunAttackCycle()
@@ -125,9 +130,9 @@ public class GameScript : MonoBehaviour
         /*send to Max*/
         /*return sounds*/
         /*play sound*/
-        audioSource.Play();
+        soundOnUI.Play();
         /*wait*/
-        while (audioSource.isPlaying)
+        while (soundOnUI.isPlaying) //yield return new WaitForSeconds(audio.clip.length);
 
         if (timerStarted)
         {
@@ -196,14 +201,14 @@ public class GameScript : MonoBehaviour
         /*set the sound the the correct hit*/
         if (attackType == 1)
         {
-            audioSource.clip = punchHit;
+            soundOnHit.clip = punchHit;
         }
         else
         {
-            audioSource.clip = swordHit;
+            soundOnHit.clip = swordHit;
         }
-        audioSource.Play();
-        while(audioSource.isPlaying)hitObj.SetActive(true);
+        soundOnHit.Play();
+        while(soundOnHit.isPlaying)hitObj.SetActive(true);
         health--;
 
         if (health > 0)
@@ -224,14 +229,14 @@ public class GameScript : MonoBehaviour
         /*set the sound the the correct block*/
         if (attackType == 1)
         {
-            audioSource.clip = punchBlocked;
+            soundOnBlock.clip = punchBlocked;
         }
         else
         {
-            audioSource.clip = swordBlocked;
+            soundOnBlock.clip = swordBlocked;
         }
-        audioSource.Play();
-        while(audioSource.isPlaying) blockObj.SetActive(true);
+        soundOnBlock.Play();
+        while(soundOnBlock.isPlaying) blockObj.SetActive(true);
         score += 100;
         startTime -= 0.2f;
 
