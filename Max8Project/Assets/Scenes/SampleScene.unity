@@ -177,7 +177,7 @@ MonoBehaviour:
   punchAttack: {fileID: 8300000, guid: 3346765bed712744ca704021902495f4, type: 3}
   punchBlocked: {fileID: 8300000, guid: b9c3b29f0088add4da5eac1e4c5b408f, type: 3}
   punchHit: {fileID: 8300000, guid: ac2b32d39543976499cfef82589d3742, type: 3}
-  healthLost: {fileID: 0}
+  healthLost: {fileID: 8300000, guid: da3578af6ec01f84384eddb4da25725a, type: 3}
   clipLength: 0
   pitches: []
   startTime: 0
@@ -922,7 +922,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!212 &1413836196
 SpriteRenderer:
   m_ObjectHideFlags: 0

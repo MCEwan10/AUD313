@@ -72,7 +72,8 @@ public class GameScript : MonoBehaviour
         soundOnUI = UIObj.GetComponent<AudioSource>();
         soundOnBlock = blockObj.GetComponent<AudioSource>();
         soundOnHit = hitObj.GetComponent<AudioSource>();
-
+        BGM.Play();
+        BGM.loop = true;
         /*adding to the dictonary for the attack dictionary for random (not used but good for reference)*/
         attackDict.Add("Punch",1);
         attackDict.Add("Sword",2);
@@ -130,7 +131,7 @@ public class GameScript : MonoBehaviour
         /*send to Max*/
         /*return sounds*/
         /*play sound*/
-        soundOnUI.Play();
+        soundOnUI.PlayOneShot(soundOnUI.clip, 100);
         /*wait*/
         while (soundOnUI.isPlaying) //yield return new WaitForSeconds(audio.clip.length);
 
@@ -207,8 +208,10 @@ public class GameScript : MonoBehaviour
         {
             soundOnHit.clip = swordHit;
         }
-        soundOnHit.Play();
+        soundOnHit.PlayOneShot(soundOnHit.clip, 100);
         while(soundOnHit.isPlaying)hitObj.SetActive(true);
+        soundOnUI.clip = healthLost;
+        soundOnUI.PlayOneShot(soundOnUI.clip, 100);
         health--;
 
         if (health > 0)
@@ -235,7 +238,7 @@ public class GameScript : MonoBehaviour
         {
             soundOnBlock.clip = swordBlocked;
         }
-        soundOnBlock.Play();
+        soundOnBlock.PlayOneShot(soundOnBlock.clip, 100);
         while(soundOnBlock.isPlaying) blockObj.SetActive(true);
         score += 100;
         startTime -= 0.2f;
