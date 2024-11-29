@@ -166,11 +166,8 @@ MonoBehaviour:
   playerAttakPitch: 0
   hitObj: {fileID: 522645753}
   blockObj: {fileID: 207490959}
-  heart1: {fileID: 0}
-  heart2: {fileID: 0}
-  heart3: {fileID: 0}
-  scoreObj: {fileID: 0}
-  soundOnHeart: {fileID: 1736110970}
+  UIObj: {fileID: 1736110965}
+  soundOnUI: {fileID: 1736110970}
   soundOnBlock: {fileID: 207490962}
   soundOnHit: {fileID: 522645756}
   BGM: {fileID: 0}
