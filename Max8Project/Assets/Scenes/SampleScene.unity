@@ -170,7 +170,7 @@ MonoBehaviour:
   soundOnUI: {fileID: 1736110970}
   soundOnBlock: {fileID: 207490962}
   soundOnHit: {fileID: 522645756}
-  BGM: {fileID: 0}
+  BGM: {fileID: 519420033}
   swordAttack: {fileID: 8300000, guid: 59bd32509daeec84e89e8ab65a01c218, type: 3}
   swordBlocked: {fileID: 8300000, guid: 2181f9426d9fb9149abd4641c132bc34, type: 3}
   swordHit: {fileID: 8300000, guid: e3daff2b4baf9b645a06f8edca1f3922, type: 3}
