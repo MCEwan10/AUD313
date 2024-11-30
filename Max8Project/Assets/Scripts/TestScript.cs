@@ -36,8 +36,10 @@ public class TestScript : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Space)) 
         {
-            audioSource2.Play();
-            audioSource.Play();
+            
+            audioSource.Play();//PlayOneShot(audioSource.clip, 0.5f);
+            //while(audioSource.isPlaying)
+            audioSource2.Play();//PlayOneShot(audioSource2.clip, 0.5f);
 
         }
     }

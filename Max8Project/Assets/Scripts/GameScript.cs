@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Tracing;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -131,10 +132,13 @@ public class GameScript : MonoBehaviour
         /*send to Max*/
         /*return sounds*/
         /*play sound*/
-        soundOnUI.PlayOneShot(soundOnUI.clip, 100);
+        soundOnUI.Play();
         /*wait*/
-        while (soundOnUI.isPlaying) //yield return new WaitForSeconds(audio.clip.length);
-
+        while (clipLength>0.0f)
+        {
+          clipLength -= Time.deltaTime;  
+        }
+        
         if (timerStarted)
         {
             currentTime -= Time.deltaTime; //start countdown
@@ -208,12 +212,19 @@ public class GameScript : MonoBehaviour
         {
             soundOnHit.clip = swordHit;
         }
-        soundOnHit.PlayOneShot(soundOnHit.clip, 100);
-        while(soundOnHit.isPlaying)hitObj.SetActive(true);
+        soundOnHit.Play();
+        hitObj.SetActive(true);
+        while (clipLength>0.0f)
+        {
+          clipLength -= Time.deltaTime;  
+        }
         soundOnUI.clip = healthLost;
-        soundOnUI.PlayOneShot(soundOnUI.clip, 100);
+        soundOnUI.Play();
         health--;
-
+        while (clipLength>0.0f)
+        {
+          clipLength -= Time.deltaTime;  
+        }
         if (health > 0)
         {
             isRoundOver = true;
@@ -238,8 +249,12 @@ public class GameScript : MonoBehaviour
         {
             soundOnBlock.clip = swordBlocked;
         }
-        soundOnBlock.PlayOneShot(soundOnBlock.clip, 100);
-        while(soundOnBlock.isPlaying) blockObj.SetActive(true);
+        soundOnBlock.Play();
+        blockObj.SetActive(true);
+        while (clipLength>0.0f)
+        {
+          clipLength -= Time.deltaTime;  
+        }
         score += 100;
         startTime -= 0.2f;
 

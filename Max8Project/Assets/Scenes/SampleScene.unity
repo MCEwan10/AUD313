@@ -174,7 +174,7 @@ MonoBehaviour:
   swordAttack: {fileID: 8300000, guid: 59bd32509daeec84e89e8ab65a01c218, type: 3}
   swordBlocked: {fileID: 8300000, guid: 2181f9426d9fb9149abd4641c132bc34, type: 3}
   swordHit: {fileID: 8300000, guid: e3daff2b4baf9b645a06f8edca1f3922, type: 3}
-  punchAttack: {fileID: 8300000, guid: 3346765bed712744ca704021902495f4, type: 3}
+  punchAttack: {fileID: 8300000, guid: 53a872cf7c857904c8dd4557d61c82bc, type: 3}
   punchBlocked: {fileID: 8300000, guid: b9c3b29f0088add4da5eac1e4c5b408f, type: 3}
   punchHit: {fileID: 8300000, guid: ac2b32d39543976499cfef82589d3742, type: 3}
   healthLost: {fileID: 8300000, guid: da3578af6ec01f84384eddb4da25725a, type: 3}
