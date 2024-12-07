@@ -81,9 +81,9 @@ public class GameScript : MonoBehaviour
         attackDict.Add("Sword",2);
 
         /*adding to the dictonary for the pitch dictionary for random (not used but good for reference)*/
-        pitchDict.Add("High",1);
-        pitchDict.Add("Medium",2);
-        pitchDict.Add("Low",3);
+        pitchDict.Add("High",0);
+        pitchDict.Add("Medium",1);
+        pitchDict.Add("Low",2);
 
         /*adding to the dictonary for the attack dictionary for player input*/
         attInpDict.Add(KeyCode.Keypad4,1);//left
@@ -315,17 +315,17 @@ public class GameScript : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Keypad8))
         {
-            playerAttakPitch = 1;
+            playerAttakPitch = 2;
             Debug.Log(playerAttakPitch);
         }
         if (Input.GetKeyDown(KeyCode.Keypad5))
         {
-            playerAttakPitch = 2;
+            playerAttakPitch = 1;
             Debug.Log(playerAttakPitch);
         }
         if (Input.GetKeyDown(KeyCode.Keypad2))
         {
-            playerAttakPitch = 3;
+            playerAttakPitch = 0;
             Debug.Log(playerAttakPitch);
         }
     }
