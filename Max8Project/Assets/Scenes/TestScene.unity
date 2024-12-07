@@ -231,8 +231,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audioSource: {fileID: 901014435}
   audioSource2: {fileID: 1196171330}
-  clip1: {fileID: 8300000, guid: b9c3b29f0088add4da5eac1e4c5b408f, type: 3}
-  clip2: {fileID: 8300000, guid: 2181f9426d9fb9149abd4641c132bc34, type: 3}
+  clipDuration: 0
+  clip1: {fileID: 8300000, guid: 53a872cf7c857904c8dd4557d61c82bc, type: 3}
+  clip2: {fileID: 8300000, guid: 59bd32509daeec84e89e8ab65a01c218, type: 3}
   TestSquare: {fileID: 901014432}
   TestSquare2: {fileID: 1196171328}
 --- !u!1 &901014432

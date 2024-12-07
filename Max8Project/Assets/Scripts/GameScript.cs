@@ -14,7 +14,7 @@ public class GameScript : MonoBehaviour
     public Image[] hearts;
     public int score;
     public Text scoreText;
-    
+    public bool isGameStarted;
     public GameObject textSayingScore;
     public int attackType;
     public int attackPitch;
@@ -37,7 +37,6 @@ public class GameScript : MonoBehaviour
     public AudioClip punchHit;
     public AudioClip healthLost;
     public float clipLength;
-    //public float[] pitches;
     public List<float> pitches = new();
 
     /*Dictionary creation*/
@@ -63,13 +62,14 @@ public class GameScript : MonoBehaviour
         attackType = 0;
         attackPitch = 0;
         startTime = 10.0f;/*initial timer duration*/
+        isGameStarted=false;
         currentTime = startTime;
         hitObj.SetActive(false);
         blockObj.SetActive(false);
         textSayingScore.SetActive(false);
-        pitches.Add(-1f);
-        pitches.Add(0f);
+        pitches.Add(-2f);
         pitches.Add(1f);
+        pitches.Add(2f);
 
         soundOnUI = UIObj.GetComponent<AudioSource>();
         soundOnBlock = blockObj.GetComponent<AudioSource>();
@@ -106,7 +106,7 @@ public class GameScript : MonoBehaviour
     }
     public void GenerateNumbers(bool isTimerRunning)
     {
-        if (!isTimerRunning)
+        if (!isTimerRunning) //Maybe the loop error has to do with the run statment being a bool and not a proper check
         {
         /*pick attackType (Sword or Punch)*/
         attackType = Random.Range(1, 3);
@@ -178,7 +178,6 @@ public class GameScript : MonoBehaviour
                 if(health > 0 && !isRoundOver)
                 {
                     StartCoroutine(Delay(delayAmount));
-                    RunAttackCycle();
                 }
             }
 
@@ -211,10 +210,12 @@ public class GameScript : MonoBehaviour
         if (attackType == 1)
         {
             soundOnHit.clip = punchHit;
+            clipLength = punchHit.length + 0.5f;
         }
         else
         {
             soundOnHit.clip = swordHit;
+            clipLength = swordHit.length + 0.5f;
         }
         soundOnHit.Play();
         hitObj.SetActive(true);
@@ -223,6 +224,7 @@ public class GameScript : MonoBehaviour
           clipLength -= Time.deltaTime;  
         }
         soundOnUI.clip = healthLost;
+        clipLength = healthLost.length + 0.7f; //longer pause for dramatic effect
         soundOnUI.Play();
         health--;
         while (clipLength>0.0f)
@@ -248,10 +250,12 @@ public class GameScript : MonoBehaviour
         if (attackType == 1)
         {
             soundOnBlock.clip = punchBlocked;
+            clipLength = punchBlocked.length + 0.5f;
         }
         else
         {
             soundOnBlock.clip = swordBlocked;
+            clipLength = swordBlocked.length + 0.5f;
         }
         soundOnBlock.Play();
         blockObj.SetActive(true);
@@ -278,12 +282,14 @@ public class GameScript : MonoBehaviour
         }
 
         RegisterInput();
-
+        if(isGameStarted)
+        {
         if (health > 0 && !isRoundOver)
         {
             StartCoroutine(Delay(delayAmount));
 
             RunAttackCycle();
+        }
         }
         
     }
@@ -327,6 +333,10 @@ public class GameScript : MonoBehaviour
         {
             playerAttakPitch = 0;
             Debug.Log(playerAttakPitch);
+        }
+        if(Input.GetKeyDown(KeyCode.Keypad0))
+        {
+            isGameStarted=true;
         }
     }
 }

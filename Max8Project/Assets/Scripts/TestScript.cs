@@ -6,7 +6,7 @@ public class TestScript : MonoBehaviour
 {
     public AudioSource audioSource;
     public AudioSource audioSource2;
-
+    public float clipDuration;
     public AudioClip clip1;
     public AudioClip clip2;
     public GameObject TestSquare;
@@ -17,6 +17,7 @@ public class TestScript : MonoBehaviour
     {
         audioSource = TestSquare.GetComponent<AudioSource>();
         audioSource2 = TestSquare2.GetComponent<AudioSource>();
+        clipDuration = 0f;
     }
 
     // Update is called once per frame
@@ -26,19 +27,24 @@ public class TestScript : MonoBehaviour
         {
             audioSource.clip = clip1;
             audioSource2.clip = clip2;
+            clipDuration = clip1.length;
             Debug.Log("$Clip 1 loaded");
         }
         if (Input.GetKeyDown(KeyCode.K)) 
         {
             audioSource.clip = clip2;
             audioSource2.clip = clip1;
+            clipDuration = clip2.length;
             Debug.Log("$Clip 2 Loaded");
         }
         if (Input.GetKeyDown(KeyCode.Space)) 
         {
             
             audioSource.Play();//PlayOneShot(audioSource.clip, 0.5f);
-            //while(audioSource.isPlaying)
+            while (clipDuration>0.0f)
+            {
+                clipDuration -= Time.deltaTime;  
+            }
             audioSource2.Play();//PlayOneShot(audioSource2.clip, 0.5f);
 
         }
