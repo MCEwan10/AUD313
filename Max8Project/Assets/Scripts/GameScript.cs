@@ -37,7 +37,8 @@ public class GameScript : MonoBehaviour
     public AudioClip punchHit;
     public AudioClip healthLost;
     public float clipLength;
-    public float[] pitches;
+    //public float[] pitches;
+    public List<float> pitches = new();
 
     /*Dictionary creation*/
     Dictionary<string, int> attackDict= new Dictionary<string, int>();
@@ -66,9 +67,9 @@ public class GameScript : MonoBehaviour
         hitObj.SetActive(false);
         blockObj.SetActive(false);
         textSayingScore.SetActive(false);
-        pitches[0] = -1f;
-        pitches[1] = 0f;
-        pitches[2] = 1f;
+        pitches.Add(-1f);
+        pitches.Add(0f);
+        pitches.Add(1f);
 
         soundOnUI = UIObj.GetComponent<AudioSource>();
         soundOnBlock = blockObj.GetComponent<AudioSource>();
