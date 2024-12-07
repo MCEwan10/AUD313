@@ -93,6 +93,8 @@ public class GameScript : MonoBehaviour
         pitInpDict.Add(KeyCode.Keypad8,1);//up
         pitInpDict.Add(KeyCode.Keypad5,2);//middle
         pitInpDict.Add(KeyCode.Keypad2,3);//down
+
+        BGM.volume = .5f;
     }
     public bool ResetTimer(bool wasHealthReduced)
     {
@@ -109,7 +111,7 @@ public class GameScript : MonoBehaviour
         /*pick attackType (Sword or Punch)*/
         attackType = Random.Range(1, 3);
         /*pick attackPitch (High, Neutral or Low)*/
-        attackPitch = Random.Range(1, 4);
+        attackPitch = Random.Range(0, 3);
         Debug.Log("$Attack :"+attackType + " Pitch :"+attackPitch);
         /*set the sound the the correct attack*/
         if (attackType == 1)
@@ -122,7 +124,8 @@ public class GameScript : MonoBehaviour
             soundOnUI.clip = swordAttack;
             clipLength = swordAttack.length;
         }
-        soundOnUI.pitch = pitches[attackPitch--];
+
+        soundOnUI.pitch = pitches[attackPitch];
         }
     }
     public void RunAttackCycle()
