@@ -67,9 +67,9 @@ public class GameScript : MonoBehaviour
         hitObj.SetActive(false);
         blockObj.SetActive(false);
         textSayingScore.SetActive(false);
-        pitches.Add(-2f);
+        pitches.Add(-0.2f);
         pitches.Add(1f);
-        pitches.Add(2f);
+        pitches.Add(0.22f);
 
         soundOnUI = UIObj.GetComponent<AudioSource>();
         soundOnBlock = blockObj.GetComponent<AudioSource>();
@@ -149,7 +149,7 @@ public class GameScript : MonoBehaviour
 
             if (currentTime <= 0.0f && !buttonPressedDuringTimer) //if valid timer and null input
             {
-                
+                soundOnUI.pitch=1f;//reset pitch for attack and heart
                 Debug.Log("Time's up to press button!");
 
                 /*check input and if match attack and pitch*/

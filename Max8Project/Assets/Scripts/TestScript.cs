@@ -37,6 +37,9 @@ public class TestScript : MonoBehaviour
             clipDuration = clip2.length;
             Debug.Log("$Clip 2 Loaded");
         }
+        if (Input.GetKeyDown(KeyCode.W)) audioSource.pitch += 0.2f;
+        if (Input.GetKeyDown(KeyCode.S)) audioSource.pitch -= 0.2f;
+        if (Input.GetKeyDown(KeyCode.E)) audioSource.pitch = 1f;
         if (Input.GetKeyDown(KeyCode.Space)) 
         {
             
@@ -45,7 +48,7 @@ public class TestScript : MonoBehaviour
             {
                 clipDuration -= Time.deltaTime;  
             }
-            audioSource2.Play();//PlayOneShot(audioSource2.clip, 0.5f);
+            //audioSource2.Play();//PlayOneShot(audioSource2.clip, 0.5f);
 
         }
     }
