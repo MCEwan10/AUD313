@@ -217,8 +217,8 @@ public class GameScript : MonoBehaviour
             soundOnHit.clip = swordHit;
             clipLength = swordHit.length + 0.5f;
         }
-        soundOnHit.Play();
         hitObj.SetActive(true);
+        soundOnHit.Play();
         while (clipLength>0.0f)
         {
           clipLength -= Time.deltaTime;  
@@ -257,8 +257,8 @@ public class GameScript : MonoBehaviour
             soundOnBlock.clip = swordBlocked;
             clipLength = swordBlocked.length + 0.5f;
         }
-        soundOnBlock.Play();
         blockObj.SetActive(true);
+        soundOnBlock.Play();
         while (clipLength>0.0f)
         {
           clipLength -= Time.deltaTime;  
