@@ -159,11 +159,12 @@ MonoBehaviour:
   - {fileID: 1551777190}
   score: 0
   scoreText: {fileID: 799585724}
+  isGameStarted: 0
   textSayingScore: {fileID: 1903551405}
   attackType: 0
   attackPitch: 0
-  playerAttakType: 0
-  playerAttakPitch: 0
+  playerAttackType: 0
+  playerAttackPitch: 0
   hitObj: {fileID: 522645753}
   blockObj: {fileID: 207490959}
   UIObj: {fileID: 1736110965}
