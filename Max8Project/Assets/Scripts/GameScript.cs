@@ -67,15 +67,17 @@ public class GameScript : MonoBehaviour
         //hitObj.SetActive(true);
         //blockObj.SetActive(true);
         textSayingScore.SetActive(false);
-        pitches.Add(-0.2f);
+        pitches.Add(0.25f);
         pitches.Add(1f);
-        pitches.Add(0.22f);
+        pitches.Add(-0.2f);
 
         soundOnUI = UIObj.GetComponent<AudioSource>();
         soundOnBlock = blockObj.GetComponent<AudioSource>();
         soundOnHit = hitObj.GetComponent<AudioSource>();
-        BGM.Play();
+        //play and loop background music
         BGM.loop = true;
+        BGM.volume = .5f;
+        BGM.Play();
         /*adding to the dictonary for the attack dictionary for random (not used but good for reference)*/
         attackDict.Add("Punch",1);
         attackDict.Add("Sword",2);
@@ -93,8 +95,6 @@ public class GameScript : MonoBehaviour
         pitInpDict.Add(KeyCode.Keypad8,1);//up
         pitInpDict.Add(KeyCode.Keypad5,2);//middle
         pitInpDict.Add(KeyCode.Keypad2,3);//down
-
-        BGM.volume = .5f;
     }
 
     public void SetAttackType(bool isTimerRunning)
@@ -256,7 +256,7 @@ public class GameScript : MonoBehaviour
         }
 
         //delay
-        StartCoroutine(Delay(delayAmount));
+        StartCoroutine(Delay((int)clipLength));
     }
 
     public void PlayerBlocked()
@@ -288,7 +288,7 @@ public class GameScript : MonoBehaviour
         startTime -= 0.2f;
 
         //delay
-        StartCoroutine(Delay(delayAmount));
+        StartCoroutine(Delay((int)clipLength));
 
         //end and reset
         _bhasAttacked = true;
