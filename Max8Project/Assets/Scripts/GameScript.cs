@@ -67,13 +67,14 @@ public class GameScript : MonoBehaviour
         //hitObj.SetActive(true);
         //blockObj.SetActive(true);
         textSayingScore.SetActive(false);
-        pitches.Add(0.25f);
+        pitches.Add(1.25f);
         pitches.Add(1f);
-        pitches.Add(-0.2f);
+        pitches.Add(0.25f);
 
         soundOnUI = UIObj.GetComponent<AudioSource>();
         soundOnBlock = blockObj.GetComponent<AudioSource>();
         soundOnHit = hitObj.GetComponent<AudioSource>();
+        soundOnUI.pitch=1f;
         //play and loop background music
         BGM.loop = true;
         BGM.volume = .5f;
@@ -92,9 +93,9 @@ public class GameScript : MonoBehaviour
         attInpDict.Add(KeyCode.Keypad6,2);//right
 
         /*adding to the dictonary for the pitch dictionary for player input*/
-        pitInpDict.Add(KeyCode.Keypad8,1);//up
-        pitInpDict.Add(KeyCode.Keypad5,2);//middle
-        pitInpDict.Add(KeyCode.Keypad2,3);//down
+        pitInpDict.Add(KeyCode.Keypad8,2);//up
+        pitInpDict.Add(KeyCode.Keypad5,1);//middle
+        pitInpDict.Add(KeyCode.Keypad2,0);//down
     }
 
     public void SetAttackType(bool isTimerRunning)
@@ -117,7 +118,6 @@ public class GameScript : MonoBehaviour
                 soundOnUI.clip = swordAttack;
                 clipLength = swordAttack.length;
             }
-
             soundOnUI.pitch = pitches[attackPitch];
             _bhasAttacked = true;
         }
@@ -130,11 +130,7 @@ public class GameScript : MonoBehaviour
         /*play sound*/
         soundOnUI.Play();
         /*wait*/
-        while (clipLength>0.0f)
-        {
-          clipLength -= Time.deltaTime;  
-        }
-        
+        StartCoroutine(Delay((int)clipLength));
         if (timerStarted)
         {
             currentTime -= Time.deltaTime; //start countdown
@@ -222,10 +218,10 @@ public class GameScript : MonoBehaviour
         soundOnHit.Play();
 
         //set sup-loop to force a slowdown of gameplay loop
-        while (clipLength>0.0f)
+        /*while (clipLength>0.0f)
         {
           clipLength -= Time.deltaTime;  
-        }
+        }*/
 
         StartCoroutine(Delay((int)clipLength));
 
@@ -237,12 +233,7 @@ public class GameScript : MonoBehaviour
         clipLength = healthLost.length + 1f; //longer pause for dramatic effect
         soundOnUI.Play();
         health--;
-
-        //sub-loop 
-        while (clipLength>=0.0f)
-        {
-          clipLength -= Time.deltaTime;  
-        }
+        StartCoroutine(Delay((int)clipLength));
 
         //lose conditional
         if (health >= 0)
@@ -277,18 +268,14 @@ public class GameScript : MonoBehaviour
         blockObj.SetActive(true);
         soundOnBlock.Play();
 
-        //force into sub-loop to force a stop in the code loop
-        while (clipLength>0.0f)
-        {
-          clipLength -= Time.deltaTime;  
-        }
+        StartCoroutine(Delay((int)clipLength));
 
         //general pdates
         score += 100;
         startTime -= 0.2f;
 
         //delay
-        StartCoroutine(Delay((int)clipLength));
+        //StartCoroutine(Delay((int)clipLength));
 
         //end and reset
         _bhasAttacked = true;
