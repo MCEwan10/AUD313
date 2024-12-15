@@ -330,11 +330,12 @@ public class GameScript : MonoBehaviour
         
 }
 
-    public float delayAmount = 0;
+    public float delayAmount2 = 1.5f;
     IEnumerator Delay(AudioSource audioSource,float delayAmount)
     {
-        yield return new WaitForSeconds(delayAmount); //2 sec delay
         audioSource.Play();
+        yield return new WaitForSeconds(delayAmount); //2 sec delay
+
     }
 
     private void ResetTimer(float _pCurrentTime)
