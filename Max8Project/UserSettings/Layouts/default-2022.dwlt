@@ -350,9 +350,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 3c210000
-      m_LastClickedID: 0
-      m_ExpandedIDs: 1afbffff
+      m_SelectedIDs: f4610000
+      m_LastClickedID: 25076
+      m_ExpandedIDs: 08f6ffff1afbfffff46100003a620000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -823,9 +823,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 1.2197807, y: -0.20817372, z: 0.02251746}
+    m_Target: {x: 426.93448, y: 246.37857, z: -1.7588465}
     speed: 2
-    m_Value: {x: 1.2197807, y: -0.20817372, z: 0.02251746}
+    m_Value: {x: 426.93448, y: 246.37857, z: -1.7588465}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -875,9 +875,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 7.7482147
+    m_Target: 324.31528
     speed: 2
-    m_Value: 7.7482147
+    m_Value: 324.31528
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -1045,7 +1045,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scripts
+    - Assets/Sounds
     m_Globs: []
     m_OriginalText: 
     m_ImportLogFlags: 0
@@ -1053,15 +1053,15 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Scripts
+  - Assets/Sounds
   m_LastFoldersGridSize: -1
   m_LastProjectPath: D:\Abertay\GDP\Year 3.1\AUD313\GitHub\AUD313\Max8Project
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: be620000
-    m_LastClickedID: 25278
+    m_SelectedIDs: ac620000
+    m_LastClickedID: 25260
     m_ExpandedIDs: 00000000aa620000ac62000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0

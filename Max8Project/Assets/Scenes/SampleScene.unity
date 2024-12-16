@@ -151,14 +151,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d63ae86b970bec44b8aa53cc0fd260f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hearts:
-  - {fileID: 1425214040}
-  - {fileID: 773573167}
-  - {fileID: 1551777190}
+  hearts: []
   text: {fileID: 799585724}
   hitObj: {fileID: 522645753}
   blockObj: {fileID: 207490959}
   UIObj: {fileID: 1736110965}
+  BGM: {fileID: 1736110970}
+  BGMClip: {fileID: 8300000, guid: 87c4595f53d6bbb40945d43afeda3988, type: 3}
   attackClips:
   - {fileID: 8300000, guid: 53a872cf7c857904c8dd4557d61c82bc, type: 3}
   - {fileID: 8300000, guid: 59bd32509daeec84e89e8ab65a01c218, type: 3}

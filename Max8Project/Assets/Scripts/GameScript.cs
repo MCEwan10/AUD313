@@ -12,7 +12,7 @@ public class GameScript : MonoBehaviour
     /*create variables*/
     private int health;
     private int numOfHearts;
-    private Image[] hearts;
+    public Image[] hearts;
     private int score;
     public Text text;
     private GameObject textSayingScore;
@@ -28,7 +28,8 @@ public class GameScript : MonoBehaviour
     private AudioSource soundOnUI;
     private AudioSource soundOnBlock;
     private AudioSource soundOnHit;
-    private AudioSource BGM;
+    public AudioSource BGM;
+    public AudioClip BGMClip;
     public AudioClip[] attackClips;
     public AudioClip[] blockClips;
     public AudioClip[] hitClips;
@@ -57,9 +58,9 @@ public class GameScript : MonoBehaviour
         pitches.Add(1.25f);
         pitches.Add(1f);
         pitches.Add(0.25f);
-        soundOnUI.pitch=1f;
 
         //play and loop background music
+        BGM.clip = BGMClip;
         BGM.loop = true;
         BGM.volume = .5f;
         BGM.Play();
@@ -219,5 +220,7 @@ void Update()
             if(i< numOfHearts) hearts[i].enabled=true;
             else hearts[i].enabled=false;
         }
+        if (textSayingScore)
+            RegisterInput();
     }
 }
