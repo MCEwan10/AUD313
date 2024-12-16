@@ -151,6 +151,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d63ae86b970bec44b8aa53cc0fd260f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hearts:
+  - {fileID: 1425214040}
+  - {fileID: 773573167}
+  - {fileID: 1551777190}
+  text: {fileID: 799585724}
   hitObj: {fileID: 522645753}
   blockObj: {fileID: 207490959}
   UIObj: {fileID: 1736110965}
@@ -821,7 +826,7 @@ GameObject:
   - component: {fileID: 799585723}
   - component: {fileID: 799585724}
   m_Layer: 5
-  m_Name: Test With Score
+  m_Name: Text With Score
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
