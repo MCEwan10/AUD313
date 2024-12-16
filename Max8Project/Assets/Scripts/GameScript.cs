@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Tracing;
+using System.Threading;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,50 +10,38 @@ using UnityEngine.UI;
 public class GameScript : MonoBehaviour
 {
     /*create variables*/
-    public int health;
-    public int numOfHearts;
+    private int health;
+    private int numOfHearts;
     public Image[] hearts;
-    public int score;
-    public Text scoreText;
-    public bool isGameStarted;
-    public GameObject textSayingScore;
-    public int attackType;
-    public int attackPitch;
-    public int playerAttackType;
-    public int playerAttackPitch;
+    private int score;
+    public Text text;
+    private GameObject textSayingScore;
+    private int attackType;
+    private int attackPitch;
+    private int playerAttackType;
+    private int playerAttackPitch;
     /*referencing tags in unity*/
     public GameObject hitObj;
     public GameObject blockObj;
     public GameObject UIObj;
     /*referencing audio in unity*/
-    public AudioSource soundOnUI;
-    public AudioSource soundOnBlock;
-    public AudioSource soundOnHit;
-    public AudioSource BGM;
-    public AudioClip swordAttack;
-    public AudioClip swordBlocked;
-    public AudioClip swordHit;
-    public AudioClip punchAttack;
-    public AudioClip punchBlocked;
-    public AudioClip punchHit;
+    private AudioSource soundOnUI;
+    private AudioSource soundOnBlock;
+    private AudioSource soundOnHit;
+    private AudioSource BGM;
+    public AudioClip[] attackClips;
+    public AudioClip[] blockClips;
+    public AudioClip[] hitClips;
     public AudioClip healthLost;
-    public float clipLength;
-    public List<float> pitches = new();
+    private float clipLength;
+    private List<float> pitches = new();
 
     /*Dictionary creation*/
     Dictionary<string, int> attackDict= new Dictionary<string, int>();
     Dictionary<string, int> pitchDict= new Dictionary<string, int>();
     Dictionary<KeyCode, int> attInpDict= new Dictionary<KeyCode, int>();
     Dictionary<KeyCode, int> pitInpDict= new Dictionary<KeyCode, int>();
-
-    /*Timer based variables*/
-    public float startTime;
     private float currentTime;
-    private bool timerStarted = false;
-    private bool buttonPressedDuringTimer = false;
-
-    //flag for round checking
-    private bool _bhasAttacked = false;
 
     // Start is called before the first frame update
     void Start()
@@ -61,29 +50,23 @@ public class GameScript : MonoBehaviour
         score = 0;
         attackType = 0;
         attackPitch = 0;
-        startTime = 10.0f;/*initial timer duration*/
-        isGameStarted=true;
-        currentTime = startTime;
-        //hitObj.SetActive(true);
-        //blockObj.SetActive(true);
-        textSayingScore.SetActive(false);
+        currentTime = 10.0f;/*initial timer duration*/
+
         pitches.Add(1.25f);
         pitches.Add(1f);
         pitches.Add(0.25f);
-
-        soundOnUI = UIObj.GetComponent<AudioSource>();
-        soundOnBlock = blockObj.GetComponent<AudioSource>();
-        soundOnHit = hitObj.GetComponent<AudioSource>();
         soundOnUI.pitch=1f;
+
         //play and loop background music
         BGM.loop = true;
         BGM.volume = .5f;
         BGM.Play();
-        /*adding to the dictonary for the attack dictionary for random (not used but good for reference)*/
+
+        /*adding to the dictonary for the attack dictionary for random (dicts not used but good for reference)*/
         attackDict.Add("Punch",1);
         attackDict.Add("Sword",2);
 
-        /*adding to the dictonary for the pitch dictionary for random (not used but good for reference)*/
+        /*adding to the dictonary for the pitch dictionary for random*/
         pitchDict.Add("High",0);
         pitchDict.Add("Medium",1);
         pitchDict.Add("Low",2);
@@ -98,249 +81,92 @@ public class GameScript : MonoBehaviour
         pitInpDict.Add(KeyCode.Keypad2,0);//down
     }
 
-    public void SetAttackType(bool isTimerRunning)
+    private void StartGame(bool isGameOver)
     {
-        if (!isTimerRunning) //Maybe the loop error has to do with the run statment being a bool and not a proper check
+        if (isGameOver)
         {
-            /*pick attackType (Sword or Punch)*/
-            attackType = Random.Range(1, 3);
-            /*pick attackPitch (High, Neutral or Low)*/
-            attackPitch = Random.Range(0, 3);
-            Debug.Log("$Attack :"+attackType + " Pitch :"+attackPitch);
-            /*set the sound the the correct attack*/
-            if (attackType == 1)
-            {
-                soundOnUI.clip = punchAttack;
-                clipLength = punchAttack.length;
-            }
-            else
-            {
-                soundOnUI.clip = swordAttack;
-                clipLength = swordAttack.length;
-            }
-            soundOnUI.pitch = pitches[attackPitch];
-            _bhasAttacked = true;
+            score = 0;
+            textSayingScore.SetActive(false);
         }
+        SetAttackType();
+        StartCoroutine(PlayAndWait());
     }
-    public void RunAttackCycle()
+
+    private IEnumerator PlayAndWait()
     {
-        //GenerateNumbers(timerStarted);
-        /*send to Max*/
-        /*return sounds*/
-        /*play sound*/
-        soundOnUI.Play();
-        /*wait*/
-        StartCoroutine(Delay(soundOnUI,clipLength));
-        if (timerStarted)
+        soundOnUI.PlayOneShot(attackClips[attackType]);
+        yield return new WaitForSeconds(clipLength);
+        StartCoroutine(WaitForPlayerInput(currentTime));
+    }
+
+    private IEnumerator WaitForPlayerInput(float timeLeft)
+    {
+        playerAttackPitch = 0;
+        playerAttackType=0;
+
+        while (timeLeft>0f)
         {
-            currentTime -= Time.deltaTime; //start countdown
-
-            if (currentTime <= 0.0f && !buttonPressedDuringTimer) //if valid timer and null input
-            {
-                soundOnUI.pitch=1f;//reset pitch for attack and heart
-                Debug.Log("Time's up to press button!");
-
-                /*check input and if match attack and pitch*/
-                if (playerAttackType==attackType && playerAttackPitch == attackPitch)
-                {
-                    //player wins round
-                    PlayerBlocked();
-                }
-                else
-                {
-                    //lose round
-                    PlayerHit();
-                }
-                //hitObj.SetActive(false);
-                //blockObj.SetActive(false);
-                timerStarted = false;
-                ResetTimer(currentTime);
-                buttonPressedDuringTimer = false;
-
-                _bhasAttacked = true;
-
-                //reset assets to init states
-                ResetGameLoop();
-
-                //start new round
-                if(health > 0 && !_bhasAttacked)
-                {
-                    //StartCoroutine(Delay(delayAmount));
-                    /* NOT SURE WHAT TO PUT HERE*/
-                }
-            }
-
+        RegisterInput();
+        timeLeft -= Time.deltaTime;
+        yield return null;
         }
-        timerStarted = true;
+        /*check input and if match attack and pitch*/
+        if (playerAttackType==attackType && playerAttackPitch == attackPitch)
+            StartCoroutine(PlayBlockedAndReplay(blockObj,soundOnBlock,clipLength,blockClips,attackType));
+        else
+            StartCoroutine(PlayHitAndReset(hitObj,soundOnHit,clipLength,hitClips,attackType,soundOnUI,healthLost,health));
+
     }
 
-    private void ResetGameLoop()
+    private IEnumerator PlayBlockedAndReplay(GameObject shower,AudioSource sound, float soundLength, AudioClip[] clips, int attack)
     {
-        //reset UI
-        hitObj.SetActive(false);
-        blockObj.SetActive(false);
+    shower.SetActive(true);
+    soundLength = clips[attack].length;
+    sound.PlayOneShot(clips[attack]);
+    yield return new WaitForSeconds(soundLength);
+    //general updates
+    score += 100;
+    currentTime -= 0.2f;
 
-        //flag variable
-        _bhasAttacked = false;
-        buttonPressedDuringTimer = false;
-
-        //reset timer
-        ResetTimer(currentTime);
+    shower.SetActive(false);
+    StartGame(false);
     }
 
-    public void ButtonPressed()
+    private IEnumerator PlayHitAndReset(GameObject shower,AudioSource sound, float soundLength, AudioClip[] clips, int attack, AudioSource healthSound, AudioClip healthClip, int heartCount)
     {
-        if (timerStarted) buttonPressedDuringTimer = true;
+        shower.SetActive(true);
+        soundLength = clips[attack].length;
+        sound.PlayOneShot(clips[attack]);
+        yield return new WaitForSeconds(soundLength);
+
+        healthSound.PlayOneShot(healthClip);
+        heartCount--;
+        yield return new WaitForSeconds(healthClip.length +1f); //longer pause for dramatic effect
+        shower.SetActive(false);
+        if(heartCount>= 0)
+            StartGame(false);
+        else
+            GameOver();
+    }
+
+    public void SetAttackType()
+    {
+        /*pick attackType (Sword or Punch)*/
+        attackType = Random.Range(1, 3);
+        /*pick attackPitch (High, Neutral or Low)*/
+        attackPitch = Random.Range(0, 3);
+        Debug.Log("$Attack :"+attackType + " Pitch :"+attackPitch);
+        
+        /*set the sound the the correct attack*/
+        soundOnUI.pitch = pitches[attackPitch];
+        clipLength = attackClips[attackType].length;
     }
 
     public void GameOver()
     {
         /*show score*/
+        text.text=score.ToString();
         textSayingScore.SetActive(true);
-        isGameStarted = false;
-    }
-
-    public void PlayerHit()
-    {
-        /*set the sound the the correct hit*/
-        if (attackType == 1)
-        {
-            soundOnHit.clip = punchHit;
-            clipLength = punchHit.length + 0.5f;
-        }
-        else
-        {
-            soundOnHit.clip = swordHit;
-            clipLength = swordHit.length + 0.5f;
-        }
-        
-        //set UI and audio
-        hitObj.SetActive(true);
-
-
-        //set sup-loop to force a slowdown of gameplay loop
-        /*while (clipLength>0.0f)
-        {
-          clipLength -= Time.deltaTime;  
-        }*/
-
-        StartCoroutine(Delay(soundOnHit,clipLength));
-
-        //load sound
-        //grab length and add a dramatic pause
-        //play sound
-        //remove life
-        soundOnUI.clip = healthLost;
-        clipLength = healthLost.length + 1f; //longer pause for dramatic effect
-        health--;
-        StartCoroutine(Delay(soundOnUI,clipLength));
-
-        //lose conditional
-        if (health >= 0)
-        {
-            _bhasAttacked = true;
-            ResetTimer(currentTime);
-        }
-        else //you suck git gud
-        {
-            GameOver();
-        }
-
-        //delay
-        //StartCoroutine(Delay((int)clipLength));
-    }
-
-    public void PlayerBlocked()
-    {
-        /*set the sound the the correct block*/
-        if (attackType == 1)
-        {
-            soundOnBlock.clip = punchBlocked;
-            clipLength = punchBlocked.length + 0.5f;
-        }
-        else
-        {
-            soundOnBlock.clip = swordBlocked;
-            clipLength = swordBlocked.length + 0.5f;
-        }
-
-        //set UI and audio
-        blockObj.SetActive(true);
-
-        StartCoroutine(Delay(soundOnBlock,clipLength));
-
-        //general pdates
-        score += 100;
-        startTime -= 0.2f;
-
-        //delay
-        //StartCoroutine(Delay((int)clipLength));
-
-        //end and reset
-        _bhasAttacked = true;
-        ResetTimer(currentTime);
-    }
-    // Update is called once per frame
-    void Update()
-    {
-        for (int i = 0; i < hearts.Length; i++) /*display current health*/
-        {
-            numOfHearts = health;
-            if(i< numOfHearts) hearts[i].enabled=true;
-            else hearts[i].enabled=false;
-        }
-
-        RegisterInput();
-
-        //gameplay loop
-        if(isGameStarted) //gameloop check
-        {
-            if (health > 0 && !_bhasAttacked) //valid round
-            {
-                SetAttackType(timerStarted); //generate attack type and audio
-
-                StartCoroutine(Delay(soundOnUI,clipLength));
-
-            }
-
-            currentTime -= Time.deltaTime; //start countdown
-
-            if (currentTime <= 0.0f && !buttonPressedDuringTimer) //if valid timer and null input
-            {
-                soundOnUI.pitch = 1f;//reset pitch for attack and heart
-                Debug.Log("Time's up to press button!");
-
-
-                //check player input for matches
-                if (playerAttackType == attackType && playerAttackPitch == attackPitch)
-                {
-                    //player wins round
-                    PlayerBlocked();
-                }
-                else
-                {
-                    //lose round
-                    PlayerHit();
-                }
-
-                if(health >= 0)
-                    ResetGameLoop();
-            }
-    }
-        
-}
-
-    public float delayAmount2 = 1.5f;
-    IEnumerator Delay(AudioSource audioSource,float delayAmount)
-    {
-        audioSource.Play();
-        yield return new WaitForSeconds(delayAmount); //2 sec delay
-
-    }
-
-    private void ResetTimer(float _pCurrentTime)
-    {
-        _pCurrentTime = startTime;
     }
 
     private void RegisterInput()
@@ -373,7 +199,7 @@ public class GameScript : MonoBehaviour
         }
         if(Input.GetKeyDown(KeyCode.Keypad0))
         {
-            isGameStarted=true;
+            StartGame(true);
         }
     }
 }
