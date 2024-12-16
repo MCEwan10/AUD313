@@ -12,7 +12,7 @@ public class GameScript : MonoBehaviour
     /*create variables*/
     private int health;
     private int numOfHearts;
-    public Image[] hearts;
+    private Image[] hearts;
     private int score;
     public Text text;
     private GameObject textSayingScore;
@@ -200,6 +200,15 @@ public class GameScript : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Keypad0))
         {
             StartGame(true);
+        }
+    }
+void Update()
+    {
+        for (int i = 0; i < hearts.Length; i++) /*display current health*/
+        {
+            numOfHearts = health;
+            if(i< numOfHearts) hearts[i].enabled=true;
+            else hearts[i].enabled=false;
         }
     }
 }
