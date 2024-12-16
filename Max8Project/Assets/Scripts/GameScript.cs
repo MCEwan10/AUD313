@@ -46,12 +46,14 @@ public class GameScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //setting inital scores
         health = 3;
         score = 0;
         attackType = 0;
         attackPitch = 0;
-        currentTime = 10.0f;/*initial timer duration*/
+        currentTime = 10.0f;//initial timer duration
 
+        //set pitches
         pitches.Add(1.25f);
         pitches.Add(1f);
         pitches.Add(0.25f);
@@ -83,9 +85,10 @@ public class GameScript : MonoBehaviour
 
     private void StartGame(bool isGameOver)
     {
-        if (isGameOver)
+        if (isGameOver)//restart game
         {
             score = 0;
+            currentTime = 10.0f;
             textSayingScore.SetActive(false);
         }
         SetAttackType();
@@ -94,8 +97,11 @@ public class GameScript : MonoBehaviour
 
     private IEnumerator PlayAndWait()
     {
+        //play sound
         soundOnUI.PlayOneShot(attackClips[attackType]);
+        //wait for sound to finish playing
         yield return new WaitForSeconds(clipLength);
+        //start timer
         StartCoroutine(WaitForPlayerInput(currentTime));
     }
 
@@ -106,9 +112,9 @@ public class GameScript : MonoBehaviour
 
         while (timeLeft>0f)
         {
-        RegisterInput();
-        timeLeft -= Time.deltaTime;
-        yield return null;
+            RegisterInput();
+            timeLeft -= Time.deltaTime;
+            yield return null;
         }
         /*check input and if match attack and pitch*/
         if (playerAttackType==attackType && playerAttackPitch == attackPitch)
@@ -120,29 +126,32 @@ public class GameScript : MonoBehaviour
 
     private IEnumerator PlayBlockedAndReplay(GameObject shower,AudioSource sound, float soundLength, AudioClip[] clips, int attack)
     {
-    shower.SetActive(true);
-    soundLength = clips[attack].length;
-    sound.PlayOneShot(clips[attack]);
-    yield return new WaitForSeconds(soundLength);
-    //general updates
-    score += 100;
-    currentTime -= 0.2f;
-
-    shower.SetActive(false);
-    StartGame(false);
-    }
-
-    private IEnumerator PlayHitAndReset(GameObject shower,AudioSource sound, float soundLength, AudioClip[] clips, int attack, AudioSource healthSound, AudioClip healthClip, int heartCount)
-    {
+        //tell player they blocked
         shower.SetActive(true);
         soundLength = clips[attack].length;
         sound.PlayOneShot(clips[attack]);
         yield return new WaitForSeconds(soundLength);
+        //general updates
+        score += 100;
+        currentTime -= 0.2f;
+        //reset for next round
+        shower.SetActive(false);
+        StartGame(false);
+    }
 
+    private IEnumerator PlayHitAndReset(GameObject shower,AudioSource sound, float soundLength, AudioClip[] clips, int attack, AudioSource healthSound, AudioClip healthClip, int heartCount)
+    {
+        //tell player they got hit
+        shower.SetActive(true);
+        soundLength = clips[attack].length;
+        sound.PlayOneShot(clips[attack]);
+        yield return new WaitForSeconds(soundLength);
+        //general updates
         healthSound.PlayOneShot(healthClip);
         heartCount--;
         yield return new WaitForSeconds(healthClip.length +1f); //longer pause for dramatic effect
         shower.SetActive(false);
+        //check if player has lost all lives
         if(heartCount>= 0)
             StartGame(false);
         else
@@ -151,27 +160,27 @@ public class GameScript : MonoBehaviour
 
     public void SetAttackType()
     {
-        /*pick attackType (Sword or Punch)*/
+        //pick attackType (Sword or Punch)
         attackType = Random.Range(1, 3);
-        /*pick attackPitch (High, Neutral or Low)*/
+        //pick attackPitch (High, Neutral or Low)
         attackPitch = Random.Range(0, 3);
         Debug.Log("$Attack :"+attackType + " Pitch :"+attackPitch);
         
-        /*set the sound the the correct attack*/
+        //set the sound the the correct attack
         soundOnUI.pitch = pitches[attackPitch];
         clipLength = attackClips[attackType].length;
     }
 
     public void GameOver()
     {
-        /*show score*/
+        //show score
         text.text=score.ToString();
         textSayingScore.SetActive(true);
     }
 
     private void RegisterInput()
     {
-        /*get player input*/
+        //get player input
         if (Input.GetKeyDown(KeyCode.Keypad4))
         {
             playerAttackType = 1;
@@ -204,7 +213,7 @@ public class GameScript : MonoBehaviour
     }
 void Update()
     {
-        for (int i = 0; i < hearts.Length; i++) /*display current health*/
+        for (int i = 0; i < hearts.Length; i++) //display current health
         {
             numOfHearts = health;
             if(i< numOfHearts) hearts[i].enabled=true;
