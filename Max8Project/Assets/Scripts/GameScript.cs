@@ -36,25 +36,20 @@ public class GameScript : MonoBehaviour
     public AudioClip healthLost;
     private float clipLength;
     private List<float> pitches = new();
+    
+    private float currentTime;
+    private bool bGameOver;
 
     /*Dictionary creation*/
     Dictionary<string, int> attackDict= new Dictionary<string, int>();
     Dictionary<string, int> pitchDict= new Dictionary<string, int>();
     Dictionary<KeyCode, int> attInpDict= new Dictionary<KeyCode, int>();
     Dictionary<KeyCode, int> pitInpDict= new Dictionary<KeyCode, int>();
-    private float currentTime;
-    private bool bGameOver;
 
     // Start is called before the first frame update
     void Start()
     {
-        //setting inital scores
-        health = 3;
-        score = 0;
-        attackType = 0;
-        attackPitch = 0;
-        currentTime = 6f;//initial timer duration
-
+        //fetching Audio components on objects
         soundOnUI = UIObj.GetComponent<AudioSource>();
         soundOnBlock = blockObj.GetComponent<AudioSource>();
         soundOnHit = hitObj.GetComponent<AudioSource>();
@@ -69,25 +64,25 @@ public class GameScript : MonoBehaviour
         BGM.loop = true;
         BGM.volume = 0.5f;
         BGM.Play();
-
-        /*adding to the dictonary for the attack dictionary for random (dicts not used but good for reference)*/
+        {
+        /*adding to the dictonary for the attack dictionary for random (NOTE: dictionaries are not used but good for reference)*/
         attackDict.Add("Punch",0);
         attackDict.Add("Sword",1);
 
         /*adding to the dictonary for the pitch dictionary for random*/
-        pitchDict.Add("High",0);
+        pitchDict.Add("High",2);
         pitchDict.Add("Medium",1);
-        pitchDict.Add("Low",2);
+        pitchDict.Add("Low",0);
 
         /*adding to the dictonary for the attack dictionary for player input*/
         attInpDict.Add(KeyCode.Keypad4,1);//left
         attInpDict.Add(KeyCode.Keypad6,2);//right
 
         /*adding to the dictonary for the pitch dictionary for player input*/
-        pitInpDict.Add(KeyCode.Keypad8,2);//up
-        pitInpDict.Add(KeyCode.Keypad5,1);//middle
-        pitInpDict.Add(KeyCode.Keypad2,0);//down
-
+        pitInpDict.Add(KeyCode.Keypad8,2);//high
+        pitInpDict.Add(KeyCode.Keypad5,1);//medium
+        pitInpDict.Add(KeyCode.Keypad2,0);//low
+        }
         GameOver();
     }
 
@@ -120,9 +115,10 @@ public class GameScript : MonoBehaviour
 
     private IEnumerator WaitForPlayerInput(float timeLeft)
     {
+        //reset player input
         playerAttackPitch = 0;
         playerAttackType = 0;
-
+        //wait timer
         while (timeLeft>0f)
         {
             RegisterInput();
@@ -191,7 +187,7 @@ public class GameScript : MonoBehaviour
 
     private void RegisterInput()
     {
-        //get player input
+        //get player inputs
         if (Input.GetKeyDown(KeyCode.Keypad4))
         {
             playerAttackType = 0;
@@ -217,6 +213,7 @@ public class GameScript : MonoBehaviour
             playerAttackPitch = 0;
             Debug.Log(playerAttackPitch);
         }
+        //game start input
         if(Input.GetKeyDown(KeyCode.Keypad0))
         {
             StartGame(true);
@@ -230,6 +227,7 @@ void Update()
             if(i< numOfHearts) hearts[i].enabled=true;
             else hearts[i].enabled=false;
         }
+        //allowing player to restart the game
         if (bGameOver)
             RegisterInput();
     }
