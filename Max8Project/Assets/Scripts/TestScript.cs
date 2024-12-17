@@ -38,7 +38,7 @@ public class TestScript : MonoBehaviour
             Debug.Log("$Clip 2 Loaded");
         }
         if (Input.GetKeyDown(KeyCode.W)) audioSource.pitch = 1.25f;
-        if (Input.GetKeyDown(KeyCode.S)) audioSource.pitch -= 0.2f;
+        if (Input.GetKeyDown(KeyCode.S)) audioSource.pitch = 0.75f;
         if (Input.GetKeyDown(KeyCode.E)) audioSource.pitch = 1f;
         if (Input.GetKeyDown(KeyCode.Space)) 
         {

@@ -15,7 +15,7 @@ public class GameScript : MonoBehaviour
     public Image[] hearts;
     private int score;
     public Text text;
-    private GameObject textSayingScore;
+    public GameObject textSayingScore;
     private int attackType;
     private int attackPitch;
     private int playerAttackType;
@@ -43,6 +43,7 @@ public class GameScript : MonoBehaviour
     Dictionary<KeyCode, int> attInpDict= new Dictionary<KeyCode, int>();
     Dictionary<KeyCode, int> pitInpDict= new Dictionary<KeyCode, int>();
     private float currentTime;
+    private bool bGameOver;
 
     // Start is called before the first frame update
     void Start()
@@ -52,22 +53,26 @@ public class GameScript : MonoBehaviour
         score = 0;
         attackType = 0;
         attackPitch = 0;
-        currentTime = 10.0f;//initial timer duration
+        currentTime = 6f;//initial timer duration
+
+        soundOnUI = UIObj.GetComponent<AudioSource>();
+        soundOnBlock = blockObj.GetComponent<AudioSource>();
+        soundOnHit = hitObj.GetComponent<AudioSource>();
 
         //set pitches
         pitches.Add(1.25f);
         pitches.Add(1f);
-        pitches.Add(0.25f);
+        pitches.Add(0.75f);
 
         //play and loop background music
         BGM.clip = BGMClip;
         BGM.loop = true;
-        BGM.volume = .5f;
+        BGM.volume = 0.5f;
         BGM.Play();
 
         /*adding to the dictonary for the attack dictionary for random (dicts not used but good for reference)*/
-        attackDict.Add("Punch",1);
-        attackDict.Add("Sword",2);
+        attackDict.Add("Punch",0);
+        attackDict.Add("Sword",1);
 
         /*adding to the dictonary for the pitch dictionary for random*/
         pitchDict.Add("High",0);
@@ -82,14 +87,18 @@ public class GameScript : MonoBehaviour
         pitInpDict.Add(KeyCode.Keypad8,2);//up
         pitInpDict.Add(KeyCode.Keypad5,1);//middle
         pitInpDict.Add(KeyCode.Keypad2,0);//down
+
+        GameOver();
     }
 
     private void StartGame(bool isGameOver)
     {
         if (isGameOver)//restart game
         {
+            bGameOver=false;
             score = 0;
-            currentTime = 10.0f;
+            currentTime = 6.0f;
+            health=3;
             textSayingScore.SetActive(false);
         }
         SetAttackType();
@@ -98,6 +107,9 @@ public class GameScript : MonoBehaviour
 
     private IEnumerator PlayAndWait()
     {
+        //set the sound the the correct attack
+        soundOnUI.pitch = pitches[attackPitch];
+        clipLength = attackClips[attackType].length;
         //play sound
         soundOnUI.PlayOneShot(attackClips[attackType]);
         //wait for sound to finish playing
@@ -109,7 +121,7 @@ public class GameScript : MonoBehaviour
     private IEnumerator WaitForPlayerInput(float timeLeft)
     {
         playerAttackPitch = 0;
-        playerAttackType=0;
+        playerAttackType = 0;
 
         while (timeLeft>0f)
         {
@@ -162,19 +174,17 @@ public class GameScript : MonoBehaviour
     public void SetAttackType()
     {
         //pick attackType (Sword or Punch)
-        attackType = Random.Range(1, 3);
+        attackType = Random.Range(0, 2);
         //pick attackPitch (High, Neutral or Low)
         attackPitch = Random.Range(0, 3);
         Debug.Log("$Attack :"+attackType + " Pitch :"+attackPitch);
         
-        //set the sound the the correct attack
-        soundOnUI.pitch = pitches[attackPitch];
-        clipLength = attackClips[attackType].length;
     }
 
     public void GameOver()
     {
         //show score
+        bGameOver=true;
         text.text=score.ToString();
         textSayingScore.SetActive(true);
     }
@@ -184,12 +194,12 @@ public class GameScript : MonoBehaviour
         //get player input
         if (Input.GetKeyDown(KeyCode.Keypad4))
         {
-            playerAttackType = 1;
+            playerAttackType = 0;
             Debug.Log(playerAttackType);
         }
         if (Input.GetKeyDown(KeyCode.Keypad6))
         {
-            playerAttackType = 2;
+            playerAttackType = 1;
             Debug.Log(playerAttackType);
         }
         if (Input.GetKeyDown(KeyCode.Keypad8))
@@ -220,7 +230,7 @@ void Update()
             if(i< numOfHearts) hearts[i].enabled=true;
             else hearts[i].enabled=false;
         }
-        if (textSayingScore)
+        if (bGameOver)
             RegisterInput();
     }
 }

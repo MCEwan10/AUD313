@@ -151,12 +151,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d63ae86b970bec44b8aa53cc0fd260f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hearts: []
+  hearts:
+  - {fileID: 1425214040}
+  - {fileID: 773573167}
+  - {fileID: 1551777190}
   text: {fileID: 799585724}
+  textSayingScore: {fileID: 1903551405}
   hitObj: {fileID: 522645753}
   blockObj: {fileID: 207490959}
   UIObj: {fileID: 1736110965}
-  BGM: {fileID: 1736110970}
+  BGM: {fileID: 519420033}
   BGMClip: {fileID: 8300000, guid: 87c4595f53d6bbb40945d43afeda3988, type: 3}
   attackClips:
   - {fileID: 8300000, guid: 53a872cf7c857904c8dd4557d61c82bc, type: 3}
@@ -471,8 +475,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 87c4595f53d6bbb40945d43afeda3988, type: 3}
-  m_PlayOnAwake: 1
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -1162,7 +1166,6 @@ RectTransform:
   - {fileID: 773573166}
   - {fileID: 1551777189}
   - {fileID: 1903551408}
-  - {fileID: 2047215052}
   m_Father: {fileID: 39148638}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1525,6 +1528,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 799585722}
+  - {fileID: 2047215052}
   m_Father: {fileID: 1736110966}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -1557,16 +1561,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2047215051}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1736110966}
+  m_Father: {fileID: 1903551408}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -78, y: -60}
+  m_AnchoredPosition: {x: -78, y: -166}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2047215053
