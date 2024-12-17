@@ -36,7 +36,7 @@ public class GameScript : MonoBehaviour
     public AudioClip healthLost;
     private float clipLength;
     private List<float> pitches = new();
-    
+
     private float currentTime;
     private bool bGameOver;
 
@@ -55,9 +55,9 @@ public class GameScript : MonoBehaviour
         soundOnHit = hitObj.GetComponent<AudioSource>();
 
         //set pitches
-        pitches.Add(1.25f);
-        pitches.Add(1f);
         pitches.Add(0.75f);
+        pitches.Add(1f);
+        pitches.Add(1.25f);
 
         //play and loop background music
         BGM.clip = BGMClip;
@@ -129,7 +129,7 @@ public class GameScript : MonoBehaviour
         if (playerAttackType==attackType && playerAttackPitch == attackPitch)
             StartCoroutine(PlayBlockedAndReplay(blockObj,soundOnBlock,clipLength,blockClips,attackType));
         else
-            StartCoroutine(PlayHitAndReset(hitObj,soundOnHit,clipLength,hitClips,attackType,soundOnUI,healthLost,health));
+            StartCoroutine(PlayHitAndReset(hitObj,soundOnHit,clipLength,hitClips,attackType,soundOnUI,healthLost));
 
     }
 
@@ -137,7 +137,7 @@ public class GameScript : MonoBehaviour
     {
         //tell player they blocked
         shower.SetActive(true);
-        soundLength = clips[attack].length;
+        soundLength = clips[attack].length +0.4f;
         sound.PlayOneShot(clips[attack]);
         yield return new WaitForSeconds(soundLength);
         //general updates
@@ -148,20 +148,21 @@ public class GameScript : MonoBehaviour
         StartGame(false);
     }
 
-    private IEnumerator PlayHitAndReset(GameObject shower,AudioSource sound, float soundLength, AudioClip[] clips, int attack, AudioSource healthSound, AudioClip healthClip, int heartCount)
+    private IEnumerator PlayHitAndReset(GameObject shower,AudioSource sound, float soundLength, AudioClip[] clips, int attack, AudioSource healthSound, AudioClip healthClip)
     {
         //tell player they got hit
         shower.SetActive(true);
         soundLength = clips[attack].length;
         sound.PlayOneShot(clips[attack]);
-        yield return new WaitForSeconds(soundLength);
+        yield return new WaitForSeconds(soundLength + 0.4f);
+        healthSound.pitch=1f;//resetting pitch
         //general updates
         healthSound.PlayOneShot(healthClip);
-        heartCount--;
+        health--;
         yield return new WaitForSeconds(healthClip.length +1f); //longer pause for dramatic effect
         shower.SetActive(false);
         //check if player has lost all lives
-        if(heartCount>= 0)
+        if(health > 0)
             StartGame(false);
         else
             GameOver();
